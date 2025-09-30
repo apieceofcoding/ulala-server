@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: ulala
+  config:
+    import: optional:classpath:db.yml
