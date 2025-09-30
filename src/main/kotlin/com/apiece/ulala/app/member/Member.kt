@@ -34,10 +34,10 @@ class Member(
 ) : BaseEntity() {
 
     companion object {
-        fun create(request: MemberCreateRequest): Member {
+        fun create(request: MemberCreateRequest, encodedPassword: String): Member {
             return Member(
                 email = request.email,
-                password = request.password,
+                password = encodedPassword,
                 nickname = request.nickname,
                 imageUrl = request.imageUrl
             )

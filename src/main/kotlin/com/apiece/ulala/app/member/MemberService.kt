@@ -6,11 +6,13 @@ import com.apiece.ulala.app.member.dto.MemberResponse
 import com.apiece.ulala.app.member.dto.MemberUpdateRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
 class MemberService(
-    private val memberRepository: MemberRepository
+    private val memberRepository: MemberRepository,
+    private val passwordEncoder: PasswordEncoder
 ) {
 
     fun createMember(request: MemberCreateRequest): MemberResponse {
@@ -22,7 +24,8 @@ class MemberService(
             throw IllegalArgumentException("이미 존재하는 닉네임입니다")
         }
 
-        val member = Member.create(request)
+        val encodedPassword = passwordEncoder.encode(request.password)
+        val member = Member.create(request, encodedPassword)
 
         val savedMember = memberRepository.save(member)
         return MemberResponse.from(savedMember)
