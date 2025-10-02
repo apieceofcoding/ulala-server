@@ -4,10 +4,9 @@ import jakarta.validation.constraints.Size
 
 class MemberUpdateRequest(
 
-    @field:Size(max = 30, message = "닉네임은 30자 이하여야 합니다")
-    val nickname: String?,
+    @field:Size(max = 30, message = "회원아이디는 30자 이하여야 합니다")
+    val memberId: String?,
 
-    val imageUrl: String?,
-
-    val level: String?
+    @field:Size(max = 30, message = "표시이름 30자 이하여야 합니다")
+    val displayName: String?,
 )

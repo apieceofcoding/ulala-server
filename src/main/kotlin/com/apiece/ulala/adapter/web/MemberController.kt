@@ -1,7 +1,6 @@
 package com.apiece.ulala.adapter.web
 
 import com.apiece.ulala.app.member.MemberService
-import com.apiece.ulala.app.member.dto.MemberCreateRequest
 import com.apiece.ulala.app.member.dto.MemberListResponse
 import com.apiece.ulala.app.member.dto.MemberResponse
 import com.apiece.ulala.app.member.dto.MemberUpdateRequest
@@ -18,12 +17,6 @@ class MemberController(
     private val memberService: MemberService
 ) {
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    fun createMember(@Valid @RequestBody request: MemberCreateRequest): MemberResponse {
-        return memberService.createMember(request)
-    }
-
     @GetMapping("/{id}")
     fun getMember(@PathVariable id: Long): MemberResponse {
         return memberService.getMember(id)
@@ -31,14 +24,14 @@ class MemberController(
 
     @GetMapping("/email/{email}")
     fun getMemberByEmail(@PathVariable email: String): MemberResponse {
-        return memberService.getMemberByEmail(email)
+        return memberService.getMemberByMemberId(email)
     }
 
     @GetMapping
     fun getAllMembers(
         @PageableDefault(size = 10) pageable: Pageable
     ): Page<MemberListResponse> {
-        return memberService.getAllMembers(pageable)
+        return memberService.getPagedMembers(pageable)
     }
 
     @PutMapping("/{id}")

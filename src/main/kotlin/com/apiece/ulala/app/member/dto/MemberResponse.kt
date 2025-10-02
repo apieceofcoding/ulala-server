@@ -5,24 +5,24 @@ import java.time.LocalDateTime
 
 class MemberResponse(
     val id: Long,
-    val email: String,
-    val nickname: String,
-    val imageUrl: String,
+    val memberId: String,
+    val displayName: String?,
+    val imageUrl: String?,
     val level: String,
-    val createdAt: LocalDateTime,
-    val modifiedAt: LocalDateTime
+    val createdAt: LocalDateTime?,
+    val modifiedAt: LocalDateTime?,
 ) {
 
     companion object {
         fun from(member: Member): MemberResponse {
             return MemberResponse(
                 id = member.id!!,
-                email = member.email,
-                nickname = member.nickname,
+                memberId = member.memberId,
+                displayName = member.displayName,
                 imageUrl = member.imageUrl,
                 level = member.memberLevel,
-                createdAt = member.createdAt!!,
-                modifiedAt = member.modifiedAt!!
+                createdAt = member.createdAt,
+                modifiedAt = member.modifiedAt,
             )
         }
     }

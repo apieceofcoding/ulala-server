@@ -28,5 +28,5 @@ abstract class BaseEntity(
 
     @LastModifiedBy
     @Column(nullable = false)
-    var modifiedBy: String? = null
+    var modifiedBy: String? = null,
 )
