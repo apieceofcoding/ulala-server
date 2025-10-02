@@ -10,12 +10,14 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.AuthenticationFailureHandler
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 @Configuration
 class SecurityConfig(
     private val oAuthenticationSuccessHandler: AuthenticationSuccessHandler,
     private val oAuthenticationFailureHandler: AuthenticationFailureHandler,
-    private val oAuthUserService: OAuthUserService
+    private val oAuthUserService: OAuthUserService,
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter
 ) {
 
     @Bean
@@ -41,6 +43,8 @@ class SecurityConfig(
                 authenticationSuccessHandler = oAuthenticationSuccessHandler
                 authenticationFailureHandler = oAuthenticationFailureHandler
             }
+
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtAuthenticationFilter)
         }
         return http.build()
     }

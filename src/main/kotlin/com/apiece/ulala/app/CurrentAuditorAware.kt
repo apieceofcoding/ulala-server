@@ -1,6 +1,5 @@
 package com.apiece.ulala.app
 
-import com.apiece.ulala.adapter.security.OAuthUser
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.AuditorAware
 import org.springframework.security.core.context.SecurityContextHolder
@@ -16,8 +15,7 @@ class CurrentAuditorAware : AuditorAware<String> {
         val auditor: String = try {
             val authentication = SecurityContextHolder.getContext().authentication
             if (authentication != null && authentication.isAuthenticated) {
-                val oAuthUser = authentication.principal as OAuthUser
-                oAuthUser.member.memberId
+                authentication.name
             } else {
                 "system"
             }

@@ -3,8 +3,10 @@ package com.apiece.ulala.adapter.security
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
@@ -20,13 +22,13 @@ class JwtAuthenticationFilter(
         filterChain: FilterChain
     ) {
         try {
-            val jwt = getJwtFromRequest(request)
+            val jwt = getJwt(request)
 
             if (jwt != null && jwtProvider.validateToken(jwt)) {
-                val memberId = jwtProvider.getMemberIdFromToken(jwt)
+                val memberId: String = jwtProvider.getMemberIdFromToken(jwt)
 
-                val authentication = UsernamePasswordAuthenticationToken(
-                    memberId,
+                val authentication = UsernamePasswordAuthenticationToken.authenticated(
+                    User(memberId, "", emptyList()),
                     null,
                     emptyList()
                 )
@@ -41,8 +43,8 @@ class JwtAuthenticationFilter(
         filterChain.doFilter(request, response)
     }
 
-    private fun getJwtFromRequest(request: HttpServletRequest): String? {
-        val bearerToken = request.getHeader("Authorization")
+    private fun getJwt(request: HttpServletRequest): String? {
+        val bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION)
         return if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
             bearerToken.substring(7)
         } else {
