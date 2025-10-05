@@ -19,12 +19,12 @@ class MemberController(
 
     @GetMapping("/{id}")
     fun getMember(@PathVariable id: Long): MemberResponse {
-        return memberService.getMember(id)
+        return memberService.get(id)
     }
 
-    @GetMapping("/email/{email}")
-    fun getMemberByEmail(@PathVariable email: String): MemberResponse {
-        return memberService.getMemberByMemberId(email)
+    @GetMapping("/memberId/{memberId}")
+    fun getMemberByMemberId(@PathVariable memberId: String): MemberResponse {
+        return memberService.getByMemberId(memberId)
     }
 
     @GetMapping

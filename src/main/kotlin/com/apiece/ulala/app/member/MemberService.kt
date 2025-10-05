@@ -1,5 +1,6 @@
 package com.apiece.ulala.app.member
 
+import com.apiece.ulala.app.db.IdGenerator
 import com.apiece.ulala.app.member.dto.MemberListResponse
 import com.apiece.ulala.app.member.dto.MemberResponse
 import com.apiece.ulala.app.member.dto.MemberUpdateRequest
@@ -11,14 +12,15 @@ import java.security.SecureRandom
 @Service
 class MemberService(
     private val memberRepository: MemberRepository,
+    private val idGenerator: IdGenerator,
 ) {
 
-    fun getMember(id: Long): MemberResponse {
+    fun get(id: Long): MemberResponse {
         val member = findMemberById(id)
         return MemberResponse.from(member)
     }
 
-    fun getMemberByMemberId(memberId: String): MemberResponse {
+    fun getByMemberId(memberId: String): MemberResponse {
         val member = memberRepository.findByMemberId(memberId)
             .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
         return MemberResponse.from(member)
@@ -55,7 +57,8 @@ class MemberService(
                 val newMember = Member.create(
                     memberId = newMemberId,
                     providerUserId = providerUserId,
-                    provider = provider
+                    provider = provider,
+                    idGenerator = idGenerator,
                 )
                 memberRepository.save(newMember)
             }

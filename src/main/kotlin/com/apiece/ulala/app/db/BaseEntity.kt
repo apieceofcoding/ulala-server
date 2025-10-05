@@ -1,4 +1,4 @@
-package com.apiece.ulala.app
+package com.apiece.ulala.app.db
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners

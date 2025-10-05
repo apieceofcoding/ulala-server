@@ -25,7 +25,7 @@ class OAuthenticationSuccessHandler(
         val oAuthUser = authentication.principal as OAuthUser
         val member = oAuthUser.member
 
-        val accessToken = jwtProvider.generateToken(member.memberId)
+        val accessToken = jwtProvider.generateToken(member.id.toString())
 
         log.info { "로그인 성공 → memberId=@${member.memberId}\naccessToken=$accessToken" }
 

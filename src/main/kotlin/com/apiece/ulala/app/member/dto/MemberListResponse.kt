@@ -12,7 +12,7 @@ class MemberListResponse(
     companion object {
         fun from(member: Member): MemberListResponse {
             return MemberListResponse(
-                id = member.id!!,
+                id = member.id,
                 memberId = member.memberId,
                 displayName = member.displayName,
                 level = member.memberLevel,

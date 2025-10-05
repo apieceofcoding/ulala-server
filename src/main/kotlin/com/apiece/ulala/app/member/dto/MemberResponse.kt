@@ -10,19 +10,23 @@ class MemberResponse(
     val imageUrl: String?,
     val level: String,
     val createdAt: LocalDateTime?,
+    val createdBy: String?,
     val modifiedAt: LocalDateTime?,
+    val modifiedBy: String?,
 ) {
 
     companion object {
         fun from(member: Member): MemberResponse {
             return MemberResponse(
-                id = member.id!!,
+                id = member.id,
                 memberId = member.memberId,
                 displayName = member.displayName,
                 imageUrl = member.imageUrl,
                 level = member.memberLevel,
                 createdAt = member.createdAt,
+                createdBy = member.createdBy,
                 modifiedAt = member.modifiedAt,
+                modifiedBy = member.modifiedBy,
             )
         }
     }

@@ -1,4 +1,4 @@
-package com.apiece.ulala.app
+package com.apiece.ulala.app.db
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.AuditorAware

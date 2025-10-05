@@ -1,6 +1,7 @@
 package com.apiece.ulala.app.member
 
-import com.apiece.ulala.app.BaseEntity
+import com.apiece.ulala.app.db.BaseEntity
+import com.apiece.ulala.app.db.IdGenerator
 import com.apiece.ulala.app.member.dto.MemberUpdateRequest
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -10,13 +11,7 @@ import java.time.LocalDateTime
 class Member private constructor(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "member_seq_gen")
-    @SequenceGenerator(
-        name = "member_seq_gen",
-        sequenceName = "member_seq",
-        allocationSize = 1
-    )
-    var id: Long? = null,
+    var id: Long,
 
     @Column(nullable = false, length = 30)
     var memberId: String,
@@ -50,8 +45,14 @@ class Member private constructor(
     }
 
     companion object {
-        fun create(memberId: String, providerUserId: String, provider: MemberProvider): Member {
+        fun create(
+            memberId: String,
+            providerUserId: String,
+            provider: MemberProvider,
+            idGenerator: IdGenerator
+        ): Member {
             return Member(
+                id = idGenerator.nextId(),
                 memberId = memberId,
                 providerUserId = providerUserId,
                 provider = provider,
