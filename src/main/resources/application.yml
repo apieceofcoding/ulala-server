@@ -3,5 +3,5 @@ spring:
     name: ulala
   config:
     import:
-    - optional:classpath:db.yml
-    - optional:classpath:security.yml
+    - optional:classpath:private/db.yml
+    - optional:classpath:private/security.yml

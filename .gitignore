@@ -39,6 +39,6 @@ out/
 ### Kotlin ###
 .kotlin
 
+.DS_Store
 secret/
-db.yml
-security.yml
+private/
