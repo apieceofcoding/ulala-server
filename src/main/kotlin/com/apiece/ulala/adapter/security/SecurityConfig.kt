@@ -30,6 +30,7 @@ class SecurityConfig(
 
             authorizeHttpRequests {
                 authorize("/oauth2/authorization/**", permitAll)
+                authorize("/oauth2/code/**", permitAll)
                 authorize(anyRequest, authenticated)
             }
 
