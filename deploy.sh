@@ -47,7 +47,7 @@ sleep 2
 # 4. 새 애플리케이션 실행
 echo -e "\n${YELLOW}[4/4] 애플리케이션 시작 중...${NO_COLOR}"
 echo -e "${YELLOW}ssh $SERVER \"cd $REMOTE_DIR && nohup java -jar $APP_NAME --spring.profiles.active=prod > app.log 2>&1 &\"${NO_COLOR}"
-ssh $SERVER "cd $REMOTE_DIR && nohup java -jar $APP_NAME --spring.profiles.active=prod > app.log 2>&1 &"
+ssh $SERVER "cd $REMOTE_DIR && nohup java -jar $APP_NAME --spring.profiles.active=prod >> app.log 2>&1 &"
 
 echo -e "\n${GREEN}========================================${NO_COLOR}"
 echo -e "${GREEN}  배포 완료!${NO_COLOR}"
