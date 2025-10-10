@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -16,6 +18,11 @@ import org.springframework.web.bind.annotation.*
 class MemberController(
     private val memberService: MemberService
 ) {
+
+    @GetMapping("/me")
+    fun getMe(@AuthenticationPrincipal user: User): MemberResponse {
+        return memberService.getByMemberId(user.username)
+    }
 
     @GetMapping("/{id}")
     fun getMember(@PathVariable id: Long): MemberResponse {

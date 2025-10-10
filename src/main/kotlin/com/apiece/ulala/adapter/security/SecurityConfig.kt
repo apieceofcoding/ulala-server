@@ -11,13 +11,15 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.HttpStatusEntryPoint
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.web.cors.CorsConfigurationSource
 
 @Configuration
 class SecurityConfig(
     private val oAuthenticationSuccessHandler: AuthenticationSuccessHandler,
     private val oAuthenticationFailureHandler: AuthenticationFailureHandler,
     private val oAuthUserService: OAuthUserService,
-    private val jwtAuthenticationFilter: JwtAuthenticationFilter
+    private val jwtAuthenticationFilter: JwtAuthenticationFilter,
+    private val corsConfigurationSource: CorsConfigurationSource,
 ) {
 
     @Bean
@@ -27,10 +29,11 @@ class SecurityConfig(
             formLogin { disable() }
             httpBasic { disable() }
             sessionManagement { sessionCreationPolicy = SessionCreationPolicy.STATELESS }
+            cors { configurationSource = corsConfigurationSource }
 
             authorizeHttpRequests {
                 authorize("/oauth2/authorization/**", permitAll)
-                authorize("/oauth2/code/**", permitAll)
+                authorize("/api/auth/token", permitAll)
                 authorize(anyRequest, authenticated)
             }
 

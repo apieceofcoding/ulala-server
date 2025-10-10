@@ -38,7 +38,7 @@ class MemberService(
                 throw IllegalArgumentException("이미 존재하는 회원아이디입니다")
             }
         }
-        member.update(request)
+        member.update(request.memberId, request.displayName)
 
         val updatedMember = memberRepository.save(member)
         return MemberResponse.from(updatedMember)

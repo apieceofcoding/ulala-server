@@ -1,5 +1,6 @@
 package com.apiece.ulala.adapter.security
 
+import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -10,6 +11,8 @@ import org.springframework.security.core.userdetails.User
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
+
+private val log = KotlinLogging.logger {}
 
 @Component
 class JwtAuthenticationFilter(
@@ -24,8 +27,8 @@ class JwtAuthenticationFilter(
         try {
             val jwt = getJwt(request)
 
-            if (jwt != null && jwtProvider.validateToken(jwt)) {
-                val memberId: String = jwtProvider.getMemberIdFromToken(jwt)
+            if (jwt != null && jwtProvider.validateAccessToken(jwt)) {
+                val memberId: String = jwtProvider.getMemberIdFromAccessToken(jwt)
 
                 val authentication = UsernamePasswordAuthenticationToken.authenticated(
                     User(memberId, "", emptyList()),
@@ -36,8 +39,8 @@ class JwtAuthenticationFilter(
 
                 SecurityContextHolder.getContext().authentication = authentication
             }
-        } catch (_: Exception) {
-            // JWT 파싱 실패 시 인증하지 않음
+        } catch (e: Exception) {
+            log.error(e) { "JWT 인증 오류" }
         }
 
         filterChain.doFilter(request, response)

@@ -2,7 +2,6 @@ package com.apiece.ulala.app.member
 
 import com.apiece.ulala.app.db.BaseEntity
 import com.apiece.ulala.app.db.IdGenerator
-import com.apiece.ulala.app.member.dto.MemberUpdateRequest
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -60,9 +59,9 @@ class Member private constructor(
         }
     }
 
-    fun update(request: MemberUpdateRequest) {
-        request.memberId?.let { this.memberId = it }
-        request.displayName?.let { this.displayName = it }
+    fun update(memberId: String?, displayName: String?) {
+        memberId?.let { this.memberId = it }
+        displayName?.let { this.displayName = it }
     }
 
     fun delete() {
