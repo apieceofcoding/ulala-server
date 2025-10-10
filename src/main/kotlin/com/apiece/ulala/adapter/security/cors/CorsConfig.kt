@@ -1,4 +1,4 @@
-package com.apiece.ulala.adapter.security
+package com.apiece.ulala.adapter.security.cors
 
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.context.annotation.Bean

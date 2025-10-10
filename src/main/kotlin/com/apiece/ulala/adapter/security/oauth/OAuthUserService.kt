@@ -1,4 +1,4 @@
-package com.apiece.ulala.adapter.security
+package com.apiece.ulala.adapter.security.oauth
 
 import com.apiece.ulala.app.member.MemberProvider
 import com.apiece.ulala.app.member.MemberService

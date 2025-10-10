@@ -1,5 +1,7 @@
 package com.apiece.ulala.adapter.security
 
+import com.apiece.ulala.adapter.security.oauth.OAuthUserService
+import com.apiece.ulala.adapter.security.token.JwtAuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus

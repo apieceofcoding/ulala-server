@@ -1,4 +1,4 @@
-package com.apiece.ulala.adapter.security
+package com.apiece.ulala.adapter.security.token
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

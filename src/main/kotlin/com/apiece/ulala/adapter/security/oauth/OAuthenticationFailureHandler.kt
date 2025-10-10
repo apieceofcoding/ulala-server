@@ -1,4 +1,4 @@
-package com.apiece.ulala.adapter.security
+package com.apiece.ulala.adapter.security.oauth
 
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest

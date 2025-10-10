@@ -1,6 +1,6 @@
 package com.apiece.ulala.adapter.web
 
-import com.apiece.ulala.adapter.security.JwtProvider
+import com.apiece.ulala.adapter.security.token.JwtProvider
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.bind.annotation.PostMapping
