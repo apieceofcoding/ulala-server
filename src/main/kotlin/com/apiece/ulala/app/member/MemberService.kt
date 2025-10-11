@@ -1,47 +1,40 @@
 package com.apiece.ulala.app.member
 
 import com.apiece.ulala.app.db.IdGenerator
-import com.apiece.ulala.app.member.dto.MemberListResponse
-import com.apiece.ulala.app.member.dto.MemberResponse
-import com.apiece.ulala.app.member.dto.MemberUpdateRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import java.security.SecureRandom
 
 @Service
 class MemberService(
     private val memberRepository: MemberRepository,
     private val idGenerator: IdGenerator,
+    private val memberIdGenerator: MemberIdGenerator,
 ) {
 
-    fun get(id: Long): MemberResponse {
-        val member = findMemberById(id)
-        return MemberResponse.from(member)
+    fun get(id: Long): Member {
+        return findMemberById(id)
     }
 
-    fun getByMemberId(memberId: String): MemberResponse {
-        val member = memberRepository.findByMemberId(memberId)
+    fun getByMemberId(memberId: String): Member {
+        return memberRepository.findByMemberId(memberId)
             .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
-        return MemberResponse.from(member)
     }
 
-    fun getPagedMembers(pageable: Pageable): Page<MemberListResponse> {
+    fun getPagedMembers(pageable: Pageable): Page<Member> {
         return memberRepository.findAll(pageable)
-            .map { MemberListResponse.from(it) }
     }
 
-    fun updateMember(id: Long, request: MemberUpdateRequest): MemberResponse {
+    fun updateMember(id: Long, memberId: String?, displayName: String?): Member {
         val member = findMemberById(id)
-        request.memberId?.let {
+        memberId?.let {
             if (memberRepository.existsByMemberId(it)) {
                 throw IllegalArgumentException("이미 존재하는 회원아이디입니다")
             }
         }
-        member.update(request.memberId, request.displayName)
+        member.update(memberId, displayName)
 
-        val updatedMember = memberRepository.save(member)
-        return MemberResponse.from(updatedMember)
+        return memberRepository.save(member)
     }
 
     fun deleteMember(id: Long) {
@@ -53,26 +46,14 @@ class MemberService(
     fun getOrCreateMember(providerUserId: String, provider: MemberProvider, memberId: String? = null): Member {
         return memberRepository.findByProviderUserIdAndProvider(providerUserId, provider)
             ?: run {
-                val newMemberId = memberId ?: generateRandomId()
                 val newMember = Member.create(
-                    memberId = newMemberId,
+                    id = idGenerator.nextId(),
+                    memberId = memberId ?: memberIdGenerator.generate(),
                     providerUserId = providerUserId,
                     provider = provider,
-                    idGenerator = idGenerator,
                 )
                 memberRepository.save(newMember)
             }
-    }
-
-    fun generateRandomId(length: Int = 20): String {
-        val random = SecureRandom()
-        val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_"
-        val sb = StringBuilder()
-        repeat(length) {
-            val index = random.nextInt(chars.length)
-            sb.append(chars[index])
-        }
-        return sb.toString()
     }
 
     private fun findMemberById(id: Long): Member {

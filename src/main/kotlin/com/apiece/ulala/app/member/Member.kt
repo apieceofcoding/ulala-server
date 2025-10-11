@@ -1,7 +1,6 @@
 package com.apiece.ulala.app.member
 
 import com.apiece.ulala.app.db.BaseEntity
-import com.apiece.ulala.app.db.IdGenerator
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -45,13 +44,13 @@ class Member private constructor(
 
     companion object {
         fun create(
+            id: Long,
             memberId: String,
             providerUserId: String,
             provider: MemberProvider,
-            idGenerator: IdGenerator
         ): Member {
             return Member(
-                id = idGenerator.nextId(),
+                id = id,
                 memberId = memberId,
                 providerUserId = providerUserId,
                 provider = provider,

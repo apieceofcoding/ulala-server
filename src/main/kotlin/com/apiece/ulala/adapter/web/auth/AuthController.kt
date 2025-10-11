@@ -1,4 +1,4 @@
-package com.apiece.ulala.adapter.web
+package com.apiece.ulala.adapter.web.auth
 
 import com.apiece.ulala.adapter.security.token.JwtProvider
 import io.github.oshai.kotlinlogging.KotlinLogging

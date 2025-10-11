@@ -1,4 +1,4 @@
-package com.apiece.ulala.app.member.dto
+package com.apiece.ulala.adapter.web.member.dto
 
 import com.apiece.ulala.app.member.Member
 

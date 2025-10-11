@@ -1,4 +1,4 @@
-package com.apiece.ulala.app.member.dto
+package com.apiece.ulala.adapter.web.member.dto
 
 import com.apiece.ulala.app.member.Member
 import java.time.LocalDateTime
@@ -9,10 +9,6 @@ class MemberResponse(
     val displayName: String?,
     val imageUrl: String?,
     val level: String,
-    val createdAt: LocalDateTime?,
-    val createdBy: String?,
-    val modifiedAt: LocalDateTime?,
-    val modifiedBy: String?,
 ) {
 
     companion object {
@@ -23,10 +19,6 @@ class MemberResponse(
                 displayName = member.displayName,
                 imageUrl = member.imageUrl,
                 level = member.memberLevel,
-                createdAt = member.createdAt,
-                createdBy = member.createdBy,
-                modifiedAt = member.modifiedAt,
-                modifiedBy = member.modifiedBy,
             )
         }
     }
