@@ -3,6 +3,7 @@ package com.apiece.ulala.adapter.web.auth
 import com.apiece.ulala.adapter.security.cookie.CookieService
 import com.apiece.ulala.adapter.security.token.JwtProvider
 import com.apiece.ulala.adapter.web.auth.dto.AuthTokenResponse
+import com.apiece.ulala.app.member.MemberService
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -18,6 +19,7 @@ private val log = KotlinLogging.logger {}
 class AuthController(
     private val jwtProvider: JwtProvider,
     private val cookieService: CookieService,
+    private val memberService: MemberService,
 ) {
 
     @PostMapping("/token")
@@ -26,10 +28,11 @@ class AuthController(
         requireNotNull(refreshToken) { "Refresh token이 없습니다" }
         require(jwtProvider.validateRefreshToken(refreshToken)) { "유효하지 않은 refresh token입니다" }
 
-        val memberId = jwtProvider.getMemberIdFromRefreshToken(refreshToken)
-        val accessToken = jwtProvider.generateAccessToken(memberId)
+        val id = jwtProvider.getMemberIdFromRefreshToken(refreshToken)
+        val member = memberService.getById(id.toLong())
+        val accessToken = jwtProvider.generateAccessToken(member.id.toString())
 
-        log.info { "Access token 발급 → memberId=@$memberId" }
+        log.info { "Access token 발급 → id=${id}, memberId=@${member.memberId}" }
 
         return AuthTokenResponse(accessToken)
     }

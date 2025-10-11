@@ -28,7 +28,7 @@ class OAuthenticationSuccessHandler(
         val oAuthUser = authentication.principal as OAuthUser
         val member = oAuthUser.member
 
-        val refreshToken = jwtProvider.generateRefreshToken(member.memberId)
+        val refreshToken = jwtProvider.generateRefreshToken(member.id.toString())
 
         val refreshTokenCookie = cookieService.createRefreshTokenCookie(refreshToken)
         response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
@@ -40,6 +40,6 @@ class OAuthenticationSuccessHandler(
         val redirectUrl = "${corsProperty.allowedOrigins.first()}/profile"
         response.sendRedirect(redirectUrl)
 
-        log.info { "로그인 성공 → memberId=@${member.memberId}" }
+        log.info { "로그인 성공 → id=${member.id}, memberId=@${member.memberId}" }
     }
 }

@@ -12,8 +12,9 @@ class MemberService(
     private val memberIdGenerator: MemberIdGenerator,
 ) {
 
-    fun get(id: Long): Member {
-        return findMemberById(id)
+    fun getById(id: Long): Member {
+        return memberRepository.findById(id)
+            .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
     }
 
     fun getByMemberId(memberId: String): Member {
@@ -26,9 +27,9 @@ class MemberService(
     }
 
     fun updateMember(id: Long, memberId: String?, displayName: String?): Member {
-        val member = findMemberById(id)
+        val member = getById(id)
         memberId?.let {
-            if (memberRepository.existsByMemberId(it)) {
+            if (memberId != member.memberId && memberRepository.existsByMemberId(it)) {
                 throw IllegalArgumentException("이미 존재하는 회원아이디입니다")
             }
         }
@@ -38,7 +39,7 @@ class MemberService(
     }
 
     fun deleteMember(id: Long) {
-        val member = findMemberById(id)
+        val member = getById(id)
         member.delete()
         memberRepository.save(member)
     }
@@ -56,8 +57,7 @@ class MemberService(
             }
     }
 
-    private fun findMemberById(id: Long): Member {
-        return memberRepository.findById(id)
-            .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
+    fun checkMemberIdExists(memberId: String): Boolean {
+        return memberRepository.existsByMemberId(memberId)
     }
 }

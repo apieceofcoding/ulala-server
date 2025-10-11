@@ -1,16 +1,18 @@
 package com.apiece.ulala.adapter.web.member
 
 import com.apiece.ulala.adapter.web.member.dto.MemberCreateRequest
+import com.apiece.ulala.adapter.web.member.dto.MemberListResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
+import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
 import com.apiece.ulala.app.member.MemberIdGenerator
 import com.apiece.ulala.app.member.MemberProvider
 import com.apiece.ulala.app.member.MemberService
 import jakarta.validation.Valid
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/admin/api/members")
@@ -24,5 +26,38 @@ class AdminMemberController(
         val providerUserId = memberIdGenerator.generate()
         val member = memberService.getOrCreateMember(providerUserId, MemberProvider.ULALA, request.memberId)
         return MemberResponse.from(member)
+    }
+
+    @GetMapping("/{id}")
+    fun getMember(@PathVariable id: Long): MemberResponse {
+        val member = memberService.getById(id)
+        return MemberResponse.from(member)
+    }
+
+    @GetMapping("/memberId/{memberId}")
+    fun getMemberByMemberId(@PathVariable memberId: String): MemberResponse {
+        val member = memberService.getByMemberId(memberId)
+        return MemberResponse.from(member)
+    }
+
+    @GetMapping
+    fun getAllMembers(@PageableDefault(size = 10) pageable: Pageable): Page<MemberListResponse> {
+        return memberService.getPagedMembers(pageable)
+            .map { MemberListResponse.from(it) }
+    }
+
+    @PutMapping("/{id}")
+    fun updateMember(
+        @PathVariable id: Long,
+        @Valid @RequestBody request: MemberUpdateRequest
+    ): MemberResponse {
+        val member = memberService.updateMember(id, request.memberId, request.displayName)
+        return MemberResponse.from(member)
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteMember(@PathVariable id: Long) {
+        memberService.deleteMember(id)
     }
 }
