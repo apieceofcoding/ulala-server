@@ -6,6 +6,7 @@ import com.apiece.ulala.adapter.web.auth.dto.AuthTokenResponse
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -42,7 +43,7 @@ class AuthController(
             log.info { "로그아웃 → memberId=@$memberId" }
         }
 
-        val deletedCookie = cookieService.deleteRefreshTokenCookie()
-        response.addCookie(deletedCookie)
+        val deletedRefreshTokenCookie = cookieService.deleteRefreshTokenCookie()
+        response.addHeader(HttpHeaders.SET_COOKIE, deletedRefreshTokenCookie.toString())
     }
 }

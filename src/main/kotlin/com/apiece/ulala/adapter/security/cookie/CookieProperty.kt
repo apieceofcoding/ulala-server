@@ -4,5 +4,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 @ConfigurationProperties(prefix = "cookie")
 class CookieProperty(
-    val refreshTokenSecure: Boolean,
+    val secure: Boolean,
+    val sameSite: String,
 )

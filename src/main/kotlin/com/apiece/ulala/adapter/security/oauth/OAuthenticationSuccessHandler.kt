@@ -6,6 +6,7 @@ import com.apiece.ulala.adapter.security.token.JwtProvider
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.http.HttpHeaders
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.stereotype.Component
@@ -30,11 +31,11 @@ class OAuthenticationSuccessHandler(
         val refreshToken = jwtProvider.generateRefreshToken(member.memberId)
 
         val refreshTokenCookie = cookieService.createRefreshTokenCookie(refreshToken)
-        response.addCookie(refreshTokenCookie)
+        response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
 
         request.session?.invalidate()
         val deletedJsessionidCookie = cookieService.deleteJsessionidCookie()
-        response.addCookie(deletedJsessionidCookie)
+        response.addHeader(HttpHeaders.SET_COOKIE, deletedJsessionidCookie.toString())
 
         val redirectUrl = "${corsProperty.allowedOrigins.first()}/profile"
         response.sendRedirect(redirectUrl)
