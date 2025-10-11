@@ -2,7 +2,6 @@ package com.apiece.ulala.adapter.security.token
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
-import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.stereotype.Component
 import java.util.*
 import javax.crypto.SecretKey
@@ -86,11 +85,3 @@ class JwtProvider(
             .subject
     }
 }
-
-@ConfigurationProperties(prefix = "jwt")
-class JwtProperty(
-    val accessSecret: String,
-    val accessExpirationTime: Long,
-    val refreshSecret: String,
-    val refreshExpirationTime: Long,
-)
