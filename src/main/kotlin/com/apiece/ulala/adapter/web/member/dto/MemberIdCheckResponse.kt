@@ -1,5 +1,5 @@
 package com.apiece.ulala.adapter.web.member.dto
 
-class MemberIdCheckResponse(
+class UsernameCheckResponse(
     val exists: Boolean
 )

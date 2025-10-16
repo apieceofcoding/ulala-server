@@ -7,9 +7,9 @@ import java.util.*
 @Repository
 interface MemberRepository : JpaRepository<Member, Long> {
 
-    fun findByMemberId(memberId: String): Optional<Member>
+    fun findByUsername(username: String): Optional<Member>
 
-    fun existsByMemberId(memberId: String): Boolean
+    fun existsByUsername(username: String): Boolean
 
     fun findByProviderUserIdAndProvider(providerUserId: String, provider: MemberProvider): Member?
 }

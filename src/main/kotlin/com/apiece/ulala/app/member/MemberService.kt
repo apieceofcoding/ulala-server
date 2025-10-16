@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class MemberService(
     private val memberRepository: MemberRepository,
     private val idGenerator: IdGenerator,
-    private val memberIdGenerator: MemberIdGenerator,
+    private val usernameGenerator: UsernameGenerator,
 ) {
 
     fun getById(id: Long): Member {
@@ -17,8 +17,8 @@ class MemberService(
             .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
     }
 
-    fun getByMemberId(memberId: String): Member {
-        return memberRepository.findByMemberId(memberId)
+    fun getByUsername(username: String): Member {
+        return memberRepository.findByUsername(username)
             .orElseThrow { IllegalArgumentException("존재하지 않는 회원입니다") }
     }
 
@@ -26,14 +26,14 @@ class MemberService(
         return memberRepository.findAll(pageable)
     }
 
-    fun updateMember(id: Long, memberId: String?, displayName: String?): Member {
+    fun updateMember(id: Long, username: String?, displayName: String?): Member {
         val member = getById(id)
-        memberId?.let {
-            if (memberId != member.memberId && memberRepository.existsByMemberId(it)) {
-                throw IllegalArgumentException("이미 존재하는 회원아이디입니다")
+        username?.let {
+            if (username != member.username && memberRepository.existsByUsername(it)) {
+                throw IllegalArgumentException("이미 존재하는 사용자이름입니다")
             }
         }
-        member.update(memberId, displayName)
+        member.update(username, displayName)
 
         return memberRepository.save(member)
     }
@@ -44,12 +44,12 @@ class MemberService(
         memberRepository.save(member)
     }
 
-    fun getOrCreateMember(providerUserId: String, provider: MemberProvider, memberId: String? = null): Member {
+    fun getOrCreateMember(providerUserId: String, provider: MemberProvider, username: String? = null): Member {
         return memberRepository.findByProviderUserIdAndProvider(providerUserId, provider)
             ?: run {
                 val newMember = Member.create(
                     id = idGenerator.nextId(),
-                    memberId = memberId ?: memberIdGenerator.generate(),
+                    username = username ?: usernameGenerator.generate(),
                     providerUserId = providerUserId,
                     provider = provider,
                 )
@@ -57,7 +57,7 @@ class MemberService(
             }
     }
 
-    fun checkMemberIdExists(memberId: String): Boolean {
-        return memberRepository.existsByMemberId(memberId)
+    fun checkUsernameExists(username: String): Boolean {
+        return memberRepository.existsByUsername(username)
     }
 }

@@ -12,7 +12,7 @@ class Member private constructor(
     var id: Long,
 
     @Column(nullable = false, length = 30)
-    var memberId: String,
+    var username: String,
 
     @Column(length = 30)
     var displayName: String? = null,
@@ -36,8 +36,8 @@ class Member private constructor(
 ) : BaseEntity() {
 
     init {
-        require(memberId.isNotBlank()) { "memberId cannot be blank" }
-        require(memberId.length <= 30) { "memberId must be less than or equal to 30" }
+        require(username.isNotBlank()) { "username cannot be blank" }
+        require(username.length <= 30) { "username must be less than or equal to 30" }
         displayName?.let { require(it.length <= 30) { "displayName must be less than or equal to 30" } }
         require(providerUserId.isNotBlank()) { "providerUserId cannot be blank" }
     }
@@ -45,21 +45,21 @@ class Member private constructor(
     companion object {
         fun create(
             id: Long,
-            memberId: String,
+            username: String,
             providerUserId: String,
             provider: MemberProvider,
         ): Member {
             return Member(
                 id = id,
-                memberId = memberId,
+                username = username,
                 providerUserId = providerUserId,
                 provider = provider,
             )
         }
     }
 
-    fun update(memberId: String?, displayName: String?) {
-        memberId?.let { this.memberId = it }
+    fun update(username: String?, displayName: String?) {
+        username?.let { this.username = it }
         displayName?.let { this.displayName = it }
     }
 

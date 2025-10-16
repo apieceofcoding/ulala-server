@@ -28,10 +28,10 @@ class JwtAuthenticationFilter(
             val jwt = getJwt(request)
 
             if (jwt != null && jwtProvider.validateAccessToken(jwt)) {
-                val memberId: String = jwtProvider.getMemberIdFromAccessToken(jwt)
+                val username: String = jwtProvider.getUsernameFromAccessToken(jwt)
 
                 val authentication = UsernamePasswordAuthenticationToken.authenticated(
-                    User(memberId, "", emptyList()),
+                    User(username, "", emptyList()),
                     null,
                     emptyList()
                 )

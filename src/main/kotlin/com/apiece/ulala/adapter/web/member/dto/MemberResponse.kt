@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 class MemberResponse(
     val id: Long,
-    val memberId: String,
+    val username: String,
     val displayName: String?,
     val imageUrl: String?,
     val level: String,
@@ -15,7 +15,7 @@ class MemberResponse(
         fun from(member: Member): MemberResponse {
             return MemberResponse(
                 id = member.id,
-                memberId = member.memberId,
+                username = member.username,
                 displayName = member.displayName,
                 imageUrl = member.imageUrl,
                 level = member.memberLevel,

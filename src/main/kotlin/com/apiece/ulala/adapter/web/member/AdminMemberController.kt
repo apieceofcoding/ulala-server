@@ -4,7 +4,7 @@ import com.apiece.ulala.adapter.web.member.dto.MemberCreateRequest
 import com.apiece.ulala.adapter.web.member.dto.MemberListResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
-import com.apiece.ulala.app.member.MemberIdGenerator
+import com.apiece.ulala.app.member.UsernameGenerator
 import com.apiece.ulala.app.member.MemberProvider
 import com.apiece.ulala.app.member.MemberService
 import jakarta.validation.Valid
@@ -18,13 +18,13 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/admin/api/members")
 class AdminMemberController(
     private val memberService: MemberService,
-    private val memberIdGenerator: MemberIdGenerator,
+    private val usernameGenerator: UsernameGenerator,
 ) {
 
     @ResponseStatus(HttpStatus.CREATED)
     fun createMember(@Valid @RequestBody request: MemberCreateRequest): MemberResponse {
-        val providerUserId = memberIdGenerator.generate()
-        val member = memberService.getOrCreateMember(providerUserId, MemberProvider.ULALA, request.memberId)
+        val providerUserId = usernameGenerator.generate()
+        val member = memberService.getOrCreateMember(providerUserId, MemberProvider.ULALA, request.username)
         return MemberResponse.from(member)
     }
 
@@ -34,9 +34,9 @@ class AdminMemberController(
         return MemberResponse.from(member)
     }
 
-    @GetMapping("/memberId/{memberId}")
-    fun getMemberByMemberId(@PathVariable memberId: String): MemberResponse {
-        val member = memberService.getByMemberId(memberId)
+    @GetMapping("/username/{username}")
+    fun getMemberByUsername(@PathVariable username: String): MemberResponse {
+        val member = memberService.getByUsername(username)
         return MemberResponse.from(member)
     }
 
@@ -51,7 +51,7 @@ class AdminMemberController(
         @PathVariable id: Long,
         @Valid @RequestBody request: MemberUpdateRequest
     ): MemberResponse {
-        val member = memberService.updateMember(id, request.memberId, request.displayName)
+        val member = memberService.updateMember(id, request.username, request.displayName)
         return MemberResponse.from(member)
     }
 

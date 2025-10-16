@@ -19,24 +19,24 @@ class JwtProvider(
         Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtProperty.refreshSecret))
     }
 
-    fun generateAccessToken(memberId: String): String {
+    fun generateAccessToken(username: String): String {
         val now = Date()
         val expiryDate = Date(now.time + jwtProperty.accessExpirationTime)
 
         return Jwts.builder()
-            .subject(memberId)
+            .subject(username)
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(accessSecretKey)
             .compact()
     }
 
-    fun generateRefreshToken(memberId: String): String {
+    fun generateRefreshToken(username: String): String {
         val now = Date()
         val expiryDate = Date(now.time + jwtProperty.refreshExpirationTime)
 
         return Jwts.builder()
-            .subject(memberId)
+            .subject(username)
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(refreshSecretKey)
@@ -67,7 +67,7 @@ class JwtProvider(
         }
     }
 
-    fun getMemberIdFromAccessToken(accessToken: String): String {
+    fun getUsernameFromAccessToken(accessToken: String): String {
         return Jwts.parser()
             .verifyWith(accessSecretKey)
             .build()
@@ -76,7 +76,7 @@ class JwtProvider(
             .subject
     }
 
-    fun getMemberIdFromRefreshToken(refreshToken: String): String {
+    fun getUsernameFromRefreshToken(refreshToken: String): String {
         return Jwts.parser()
             .verifyWith(refreshSecretKey)
             .build()

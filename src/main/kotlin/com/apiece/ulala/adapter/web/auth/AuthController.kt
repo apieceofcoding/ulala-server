@@ -28,11 +28,11 @@ class AuthController(
         requireNotNull(refreshToken) { "Refresh token이 없습니다" }
         require(jwtProvider.validateRefreshToken(refreshToken)) { "유효하지 않은 refresh token입니다" }
 
-        val id = jwtProvider.getMemberIdFromRefreshToken(refreshToken)
+        val id = jwtProvider.getUsernameFromRefreshToken(refreshToken)
         val member = memberService.getById(id.toLong())
         val accessToken = jwtProvider.generateAccessToken(member.id.toString())
 
-        log.info { "Access token 발급 → id=${id}, memberId=@${member.memberId}" }
+        log.info { "Access token 발급 → id=${id}, username=@${member.username}" }
 
         return AuthTokenResponse(accessToken)
     }
@@ -42,8 +42,8 @@ class AuthController(
         val refreshToken = request.cookies?.find { it.name == "refreshToken" }?.value
 
         if (refreshToken != null && jwtProvider.validateRefreshToken(refreshToken)) {
-            val memberId = jwtProvider.getMemberIdFromRefreshToken(refreshToken)
-            log.info { "로그아웃 → memberId=@$memberId" }
+            val username = jwtProvider.getUsernameFromRefreshToken(refreshToken)
+            log.info { "로그아웃 → username=@$username" }
         }
 
         val deletedRefreshTokenCookie = cookieService.deleteRefreshTokenCookie()

@@ -1,6 +1,6 @@
 package com.apiece.ulala.adapter.web.member
 
-import com.apiece.ulala.adapter.web.member.dto.MemberIdCheckResponse
+import com.apiece.ulala.adapter.web.member.dto.UsernameCheckResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
 import com.apiece.ulala.app.member.MemberService
@@ -25,13 +25,13 @@ class MemberController(
         @AuthenticationPrincipal user: User,
         @RequestBody request: MemberUpdateRequest
     ): MemberResponse {
-        val updatedMember = memberService.updateMember(user.username.toLong(), request.memberId, request.displayName)
+        val updatedMember = memberService.updateMember(user.username.toLong(), request.username, request.displayName)
         return MemberResponse.from(updatedMember)
     }
 
-    @GetMapping("{memberId}/check")
-    fun checkMemberId(@PathVariable memberId: String): MemberIdCheckResponse {
-        val exists = memberService.checkMemberIdExists(memberId)
-        return MemberIdCheckResponse(exists)
+    @GetMapping("{username}/check")
+    fun checkUsername(@PathVariable username: String): UsernameCheckResponse {
+        val exists = memberService.checkUsernameExists(username)
+        return UsernameCheckResponse(exists)
     }
 }

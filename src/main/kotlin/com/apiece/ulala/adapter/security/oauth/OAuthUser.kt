@@ -9,6 +9,6 @@ class OAuthUser(
 ) : OidcUser by oidcUser {
 
     override fun getName(): String {
-        return member.memberId
+        return member.username
     }
 }

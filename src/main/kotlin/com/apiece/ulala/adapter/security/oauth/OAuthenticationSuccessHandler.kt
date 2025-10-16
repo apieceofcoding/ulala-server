@@ -40,6 +40,6 @@ class OAuthenticationSuccessHandler(
         val redirectUrl = "${corsProperty.allowedOrigins.first()}/profile"
         response.sendRedirect(redirectUrl)
 
-        log.info { "로그인 성공 → id=${member.id}, memberId=@${member.memberId}" }
+        log.info { "로그인 성공 → id=${member.id}, username=@${member.username}" }
     }
 }

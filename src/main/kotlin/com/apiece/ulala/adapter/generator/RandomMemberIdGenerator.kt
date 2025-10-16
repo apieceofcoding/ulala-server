@@ -1,11 +1,11 @@
 package com.apiece.ulala.adapter.generator
 
-import com.apiece.ulala.app.member.MemberIdGenerator
+import com.apiece.ulala.app.member.UsernameGenerator
 import org.springframework.stereotype.Component
 import java.security.SecureRandom
 
 @Component
-class RandomMemberIdGenerator : MemberIdGenerator {
+class RandomUsernameGenerator : UsernameGenerator {
 
     override fun generate(length: Int): String {
         val random = SecureRandom()

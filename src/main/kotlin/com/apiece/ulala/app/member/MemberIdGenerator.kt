@@ -1,6 +1,6 @@
 package com.apiece.ulala.app.member
 
-interface MemberIdGenerator {
+interface UsernameGenerator {
 
     fun generate(length: Int = 20): String
 }
