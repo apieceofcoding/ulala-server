@@ -17,8 +17,8 @@ class AdminTaskController(
 ) {
 
     @GetMapping("/{id}")
-    fun getTask(@PathVariable id: Long): TaskResponse {
-        val task = taskService.getById(id)
+    fun getTask(@PathVariable id: String): TaskResponse {
+        val task = taskService.getById(id.toLong())
         return TaskResponse.from(task)
     }
 
@@ -30,11 +30,11 @@ class AdminTaskController(
 
     @PutMapping("/{id}")
     fun updateTask(
-        @PathVariable id: Long,
+        @PathVariable id: String,
         @Valid @RequestBody request: TaskUpdateRequest
     ): TaskResponse {
         val task = taskService.updateTask(
-            id = id,
+            id = id.toLong(),
             title = request.title,
             description = request.description,
             status = request.status,
@@ -47,7 +47,7 @@ class AdminTaskController(
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteTask(@PathVariable id: Long) {
-        taskService.deleteTask(id)
+    fun deleteTask(@PathVariable id: String) {
+        taskService.deleteTask(id.toLong())
     }
 }

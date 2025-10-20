@@ -60,7 +60,7 @@ class Task private constructor(
                 memberId = memberId,
                 title = title,
                 description = description,
-                startAt = startAt,
+                startAt = startAt ?: LocalDateTime.now(),
                 endAt = endAt,
                 dueAt = dueAt,
             )
@@ -77,7 +77,14 @@ class Task private constructor(
     ) {
         title?.let { this.title = it }
         description?.let { this.description = it }
-        status?.let { this.status = it }
+        status?.let {
+            this.status = it
+            if (it == TaskStatus.DONE && this.endAt == null) {
+                this.endAt = LocalDateTime.now()
+            } else if (it != TaskStatus.DONE) {
+                this.endAt = null
+            }
+        }
         startAt?.let { this.startAt = it }
         endAt?.let { this.endAt = it }
         dueAt?.let { this.dueAt = it }

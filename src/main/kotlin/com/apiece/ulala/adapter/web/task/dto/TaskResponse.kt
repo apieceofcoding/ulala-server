@@ -5,8 +5,8 @@ import com.apiece.ulala.app.task.TaskStatus
 import java.time.LocalDateTime
 
 class TaskResponse(
-    val id: Long,
-    val memberId: Long,
+    val id: String,
+    val memberId: String,
     val title: String,
     val description: String?,
     val status: TaskStatus,
@@ -20,8 +20,8 @@ class TaskResponse(
     companion object {
         fun from(task: Task): TaskResponse {
             return TaskResponse(
-                id = task.id,
-                memberId = task.memberId,
+                id = task.id.toString(),
+                memberId = task.memberId.toString(),
                 title = task.title,
                 description = task.description,
                 status = task.status,

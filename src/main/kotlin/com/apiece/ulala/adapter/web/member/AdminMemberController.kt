@@ -4,9 +4,9 @@ import com.apiece.ulala.adapter.web.member.dto.MemberCreateRequest
 import com.apiece.ulala.adapter.web.member.dto.MemberListResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
-import com.apiece.ulala.app.member.UsernameGenerator
 import com.apiece.ulala.app.member.MemberProvider
 import com.apiece.ulala.app.member.MemberService
+import com.apiece.ulala.app.member.UsernameGenerator
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -29,8 +29,8 @@ class AdminMemberController(
     }
 
     @GetMapping("/{id}")
-    fun getMember(@PathVariable id: Long): MemberResponse {
-        val member = memberService.getById(id)
+    fun getMember(@PathVariable id: String): MemberResponse {
+        val member = memberService.getById(id.toLong())
         return MemberResponse.from(member)
     }
 
@@ -48,16 +48,16 @@ class AdminMemberController(
 
     @PutMapping("/{id}")
     fun updateMember(
-        @PathVariable id: Long,
+        @PathVariable id: String,
         @Valid @RequestBody request: MemberUpdateRequest
     ): MemberResponse {
-        val member = memberService.updateMember(id, request.username, request.displayName)
+        val member = memberService.updateMember(id.toLong(), request.username, request.displayName)
         return MemberResponse.from(member)
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun deleteMember(@PathVariable id: Long) {
-        memberService.deleteMember(id)
+    fun deleteMember(@PathVariable id: String) {
+        memberService.deleteMember(id.toLong())
     }
 }

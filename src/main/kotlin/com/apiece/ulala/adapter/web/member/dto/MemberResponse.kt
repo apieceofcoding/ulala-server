@@ -1,10 +1,9 @@
 package com.apiece.ulala.adapter.web.member.dto
 
 import com.apiece.ulala.app.member.Member
-import java.time.LocalDateTime
 
 class MemberResponse(
-    val id: Long,
+    val id: String,
     val username: String,
     val displayName: String?,
     val imageUrl: String?,
@@ -14,7 +13,7 @@ class MemberResponse(
     companion object {
         fun from(member: Member): MemberResponse {
             return MemberResponse(
-                id = member.id,
+                id = member.id.toString(),
                 username = member.username,
                 displayName = member.displayName,
                 imageUrl = member.imageUrl,
