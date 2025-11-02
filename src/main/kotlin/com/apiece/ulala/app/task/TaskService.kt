@@ -65,7 +65,7 @@ class TaskService(
         taskRepository.save(task)
     }
 
-    fun getTaskDailyStats(memberId: Long, startDate: LocalDate, endDate: LocalDate): List<TaskDailyCount> {
+    fun getTaskDailyStats(memberId: Long, startDate: LocalDate, endDate: LocalDate): List<TaskDailyStats> {
         require(startDate <= endDate) { "startAt must be before or equal to endAt" }
 
         val startAt = startDate.atStartOfDay()
@@ -74,7 +74,7 @@ class TaskService(
 
         val stats = tasks
             .groupBy { it.modifiedAt.toLocalDate() }
-            .map { (date, taskList) -> TaskDailyCount(date, count = taskList.size) }
+            .map { (date, taskList) -> TaskDailyStats(date, count = taskList.size) }
             .sortedBy { it.date }
 
         return stats
@@ -83,5 +83,19 @@ class TaskService(
     fun getRecentlyModifiedTasks(memberId: Long, pageSize: Int = 5): Slice<Task> {
         val pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "modifiedAt"))
         return taskRepository.findTopByMemberIdAndDeletedFalse(memberId, pageable)
+    }
+
+    fun getTaskWeeklyStats(memberId: Long): TaskWeeklyStats {
+        val today = LocalDate.now()
+        val startDate = today.minusDays(6)
+        val startAt = startDate.atStartOfDay()
+        val endAt = today.plusDays(1).atStartOfDay()
+
+        val tasks = taskRepository.findByMemberIdAndCreatedAtBetweenAndDeletedFalse(memberId, startAt, endAt)
+
+        val totalCount = tasks.size
+        val completedCount = tasks.count { it.status == TaskStatus.DONE }
+
+        return TaskWeeklyStats(totalCount, completedCount)
     }
 }

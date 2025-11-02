@@ -29,4 +29,10 @@ interface TaskRepository : JpaRepository<Task, Long> {
     ): List<TaskModifiedAt>
 
     fun findTopByMemberIdAndDeletedFalse(memberId: Long, pageable: Pageable): Slice<Task>
+
+    fun findByMemberIdAndCreatedAtBetweenAndDeletedFalse(
+        memberId: Long,
+        startAt: LocalDateTime,
+        endAt: LocalDateTime
+    ): List<Task>
 }

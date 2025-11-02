@@ -3,18 +3,15 @@ package com.apiece.ulala.adapter.web.task
 import com.apiece.ulala.adapter.web.task.dto.TaskCreateRequest
 import com.apiece.ulala.adapter.web.task.dto.TaskResponse
 import com.apiece.ulala.adapter.web.task.dto.TaskUpdateRequest
-import com.apiece.ulala.app.task.TaskDailyCount
 import com.apiece.ulala.app.task.TaskService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
-import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
-import java.time.LocalDate
 
 @RestController
 class TaskController(
@@ -51,25 +48,6 @@ class TaskController(
     ): Page<TaskResponse> {
         return taskService.getPagedTasksByMemberId(user.username.toLong(), pageable)
             .map { TaskResponse.from(it) }
-    }
-
-    @GetMapping("/api/tasks/recent")
-    fun getRecentlyModifiedTasks(
-        @AuthenticationPrincipal user: User,
-        @RequestParam(defaultValue = "5") limit: Int
-    ): List<TaskResponse> {
-        return taskService.getRecentlyModifiedTasks(user.username.toLong(), limit)
-            .map { TaskResponse.from(it) }
-            .toList()
-    }
-
-    @GetMapping("/api/tasks/daily-stats")
-    fun getTaskDailyStats(
-        @AuthenticationPrincipal user: User,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate,
-        @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endDate: LocalDate
-    ): List<TaskDailyCount> {
-        return taskService.getTaskDailyStats(user.username.toLong(), startDate, endDate)
     }
 
     @PutMapping("/api/tasks/{id}")
