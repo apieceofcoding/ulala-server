@@ -3,10 +3,27 @@ package com.apiece.ulala.app.task
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
+import org.springframework.data.jpa.repository.Query
+import org.springframework.data.repository.query.Param
+import java.time.LocalDateTime
 
-@Repository
 interface TaskRepository : JpaRepository<Task, Long> {
 
     fun findByMemberIdAndDeleted(memberId: Long, deleted: Boolean, pageable: Pageable): Page<Task>
+
+    @Query(
+        value = """
+        SELECT t.modifiedAt as modifiedAt
+        FROM Task t
+        WHERE t.memberId = :memberId 
+        AND t.deleted = false 
+        AND t.modifiedAt >= :startAt
+        AND t.modifiedAt < :endAt
+        """
+    )
+    fun findByMemberIdAndModifiedAtBetween(
+        @Param("memberId") memberId: Long,
+        @Param("startAt") startAt: LocalDateTime,
+        @Param("endAt") endAt: LocalDateTime
+    ): List<TaskModifiedAt>
 }

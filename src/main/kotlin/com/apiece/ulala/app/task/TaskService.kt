@@ -4,6 +4,7 @@ import com.apiece.ulala.app.db.IdGenerator
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Service
@@ -63,5 +64,20 @@ class TaskService(
         val task = getById(id)
         task.delete()
         taskRepository.save(task)
+    }
+
+    fun getTaskDailyStats(memberId: Long, startDate: LocalDate, endDate: LocalDate): List<TaskDailyCount> {
+        require(startDate <= endDate) { "startAt must be before or equal to endAt" }
+
+        val startAt = startDate.atStartOfDay()
+        val endAt = endDate.plusDays(1).atStartOfDay()
+        val tasks: List<TaskModifiedAt> = taskRepository.findByMemberIdAndModifiedAtBetween(memberId, startAt, endAt)
+
+        val stats = tasks
+            .groupBy { it.modifiedAt.toLocalDate() }
+            .map { (date, taskList) -> TaskDailyCount(date, count = taskList.size) }
+            .sortedBy { it.date }
+
+        return stats
     }
 }
