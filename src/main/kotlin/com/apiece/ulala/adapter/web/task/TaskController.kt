@@ -44,7 +44,7 @@ class TaskController(
     @GetMapping("/api/tasks")
     fun getMyTasks(
         @AuthenticationPrincipal user: User,
-        @PageableDefault(size = 10) pageable: Pageable
+        @PageableDefault(size = 100) pageable: Pageable
     ): Page<TaskResponse> {
         return taskService.getPagedTasksByMemberId(user.username.toLong(), pageable)
             .map { TaskResponse.from(it) }
