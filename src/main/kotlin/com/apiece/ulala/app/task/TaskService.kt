@@ -1,8 +1,7 @@
 package com.apiece.ulala.app.task
 
 import com.apiece.ulala.app.db.IdGenerator
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.*
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -43,7 +42,7 @@ class TaskService(
     }
 
     fun getPagedTasksByMemberId(memberId: Long, pageable: Pageable): Page<Task> {
-        return taskRepository.findByMemberIdAndDeleted(memberId, false, pageable)
+        return taskRepository.findByMemberIdAndDeletedFalse(memberId, pageable)
     }
 
     fun updateTask(
@@ -79,5 +78,10 @@ class TaskService(
             .sortedBy { it.date }
 
         return stats
+    }
+
+    fun getRecentlyModifiedTasks(memberId: Long, pageSize: Int = 5): Slice<Task> {
+        val pageable = PageRequest.of(0, pageSize, Sort.by(Sort.Direction.DESC, "modifiedAt"))
+        return taskRepository.findTopByMemberIdAndDeletedFalse(memberId, pageable)
     }
 }

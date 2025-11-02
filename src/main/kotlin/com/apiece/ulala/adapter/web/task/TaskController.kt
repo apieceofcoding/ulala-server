@@ -53,6 +53,16 @@ class TaskController(
             .map { TaskResponse.from(it) }
     }
 
+    @GetMapping("/api/tasks/recent")
+    fun getRecentlyModifiedTasks(
+        @AuthenticationPrincipal user: User,
+        @RequestParam(defaultValue = "5") limit: Int
+    ): List<TaskResponse> {
+        return taskService.getRecentlyModifiedTasks(user.username.toLong(), limit)
+            .map { TaskResponse.from(it) }
+            .toList()
+    }
+
     @GetMapping("/api/tasks/daily-stats")
     fun getTaskDailyStats(
         @AuthenticationPrincipal user: User,

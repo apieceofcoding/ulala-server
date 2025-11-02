@@ -2,6 +2,7 @@ package com.apiece.ulala.app.task
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Slice
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -9,14 +10,14 @@ import java.time.LocalDateTime
 
 interface TaskRepository : JpaRepository<Task, Long> {
 
-    fun findByMemberIdAndDeleted(memberId: Long, deleted: Boolean, pageable: Pageable): Page<Task>
+    fun findByMemberIdAndDeletedFalse(memberId: Long, pageable: Pageable): Page<Task>
 
     @Query(
         value = """
         SELECT t.modifiedAt as modifiedAt
         FROM Task t
-        WHERE t.memberId = :memberId 
-        AND t.deleted = false 
+        WHERE t.memberId = :memberId
+        AND t.deleted = false
         AND t.modifiedAt >= :startAt
         AND t.modifiedAt < :endAt
         """
@@ -26,4 +27,6 @@ interface TaskRepository : JpaRepository<Task, Long> {
         @Param("startAt") startAt: LocalDateTime,
         @Param("endAt") endAt: LocalDateTime
     ): List<TaskModifiedAt>
+
+    fun findTopByMemberIdAndDeletedFalse(memberId: Long, pageable: Pageable): Slice<Task>
 }
