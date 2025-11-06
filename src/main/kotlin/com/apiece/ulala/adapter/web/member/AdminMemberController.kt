@@ -1,7 +1,6 @@
 package com.apiece.ulala.adapter.web.member
 
 import com.apiece.ulala.adapter.web.member.dto.MemberCreateRequest
-import com.apiece.ulala.adapter.web.member.dto.MemberListResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
 import com.apiece.ulala.app.member.MemberProvider
@@ -41,9 +40,9 @@ class AdminMemberController(
     }
 
     @GetMapping
-    fun getAllMembers(@PageableDefault(size = 10) pageable: Pageable): Page<MemberListResponse> {
+    fun getAllMembers(@PageableDefault(size = 10) pageable: Pageable): Page<MemberResponse> {
         return memberService.getPagedMembers(pageable)
-            .map { MemberListResponse.from(it) }
+            .map { MemberResponse.from(it) }
     }
 
     @PutMapping("/{id}")

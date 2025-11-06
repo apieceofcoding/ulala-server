@@ -1,8 +1,11 @@
 package com.apiece.ulala.app.task
 
 import com.apiece.ulala.app.db.IdGenerator
+import com.apiece.ulala.app.reward.RewardService
+import com.apiece.ulala.app.reward.SourceType
 import org.springframework.data.domain.*
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -10,6 +13,7 @@ import java.time.LocalDateTime
 class TaskService(
     private val taskRepository: TaskRepository,
     private val idGenerator: IdGenerator,
+    private val rewardService: RewardService,
 ) {
 
     fun createTask(
@@ -55,8 +59,23 @@ class TaskService(
         dueAt: LocalDateTime?
     ): Task {
         val task = getById(id)
+        val previousStatus = task.status
+
         task.update(title, description, status, startAt, endAt, dueAt)
-        return taskRepository.save(task)
+        val updatedTask = taskRepository.save(task)
+
+        // Task가 완료 상태로 변경되었을 때 리워드 생성
+        if (status == TaskStatus.DONE && previousStatus != TaskStatus.DONE) {
+            rewardService.createRewardIfNotExists(
+                memberId = task.memberId,
+                sourceId = task.id,
+                sourceType = SourceType.TASK,
+                point = BigDecimal("8"),
+                exp = BigDecimal("13")
+            )
+        }
+
+        return updatedTask
     }
 
     fun deleteTask(id: Long) {

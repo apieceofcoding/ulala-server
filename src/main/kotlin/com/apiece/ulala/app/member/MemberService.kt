@@ -4,6 +4,7 @@ import com.apiece.ulala.app.db.IdGenerator
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 
 @Service
 class MemberService(
@@ -59,5 +60,12 @@ class MemberService(
 
     fun checkUsernameExists(username: String): Boolean {
         return memberRepository.existsByUsername(username)
+    }
+
+    fun addReward(memberId: Long, point: BigDecimal, exp: BigDecimal) {
+        val member = getById(memberId)
+        member.addReward(point, exp)
+        member.checkAndLevelUp()
+        memberRepository.save(member)
     }
 }

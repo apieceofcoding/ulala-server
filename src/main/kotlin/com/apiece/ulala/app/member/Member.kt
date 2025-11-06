@@ -2,6 +2,7 @@ package com.apiece.ulala.app.member
 
 import com.apiece.ulala.app.db.BaseEntity
 import jakarta.persistence.*
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @Entity
@@ -19,14 +20,20 @@ class Member private constructor(
 
     var imageUrl: String? = null,
 
-    @Column(nullable = false)
-    var memberLevel: String = "1",
-
     @Column
     var providerUserId: String,
 
     @Enumerated(EnumType.STRING)
     var provider: MemberProvider,
+
+    @Column(nullable = false)
+    var memberLevel: Int = 1,
+
+    @Column(nullable = false, precision = 19)
+    var point: BigDecimal = BigDecimal.ZERO,
+
+    @Column(nullable = false, precision = 19)
+    var exp: BigDecimal = BigDecimal.ZERO,
 
     @Column(nullable = false)
     var deleted: Boolean = false,
@@ -61,6 +68,32 @@ class Member private constructor(
     fun update(username: String?, displayName: String?) {
         username?.let { this.username = it }
         displayName?.let { this.displayName = it }
+    }
+
+    fun addReward(point: BigDecimal, exp: BigDecimal) {
+        this.point = this.point.add(point)
+        this.exp = this.exp.add(exp)
+    }
+
+    fun checkAndLevelUp() {
+        while (exp >= getRequiredExpForNextLevel()) {
+            val requiredExp = getRequiredExpForNextLevel()
+            exp = exp.subtract(requiredExp)
+            memberLevel++
+        }
+    }
+
+    fun getRequiredExpForNextLevel(): BigDecimal {
+        // 레벨 * 100 * (1 + 레벨 * 0.1)
+        // Level 1: 110
+        // Level 2: 240
+        // Level 3: 390
+        // Level 4: 560
+        // Level 5: 750
+        val baseExp = BigDecimal(100)
+        val levelMultiplier = BigDecimal(memberLevel)
+        val growthFactor = BigDecimal.ONE.add(levelMultiplier.multiply(BigDecimal("0.1")))
+        return baseExp.multiply(levelMultiplier).multiply(growthFactor)
     }
 
     fun delete() {
