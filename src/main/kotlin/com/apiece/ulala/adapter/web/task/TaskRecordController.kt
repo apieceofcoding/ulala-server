@@ -29,7 +29,7 @@ class TaskRecordController(
     @GetMapping("/api/tasks/recent")
     fun getRecentlyModifiedTasks(
         @AuthenticationPrincipal user: User,
-        @RequestParam(defaultValue = "5") limit: Int
+        @RequestParam(defaultValue = "10") limit: Int
     ): List<TaskResponse> {
         return taskService.getRecentlyModifiedTasks(user.username.toLong(), limit)
             .map { TaskResponse.from(it) }
