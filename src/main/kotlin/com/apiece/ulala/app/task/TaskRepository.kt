@@ -35,4 +35,9 @@ interface TaskRepository : JpaRepository<Task, Long> {
         startAt: LocalDateTime,
         endAt: LocalDateTime
     ): List<Task>
+
+    fun findTopByMemberIdAndStatusAndDeletedFalseOrderByDisplayOrderDesc(
+        memberId: Long,
+        status: TaskStatus
+    ): Task?
 }

@@ -60,6 +60,7 @@ class TaskController(
             title = request.title,
             description = request.description,
             status = request.status,
+            displayOrder = request.displayOrder,
             startAt = request.startAt,
             endAt = request.endAt,
             dueAt = request.dueAt,

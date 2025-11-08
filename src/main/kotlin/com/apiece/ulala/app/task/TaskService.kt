@@ -24,11 +24,18 @@ class TaskService(
         endAt: LocalDateTime?,
         dueAt: LocalDateTime?
     ): Task {
+        val maxDisplayOrderTask = taskRepository.findTopByMemberIdAndStatusAndDeletedFalseOrderByDisplayOrderDesc(
+            memberId = memberId,
+            status = TaskStatus.TODO
+        )
+        val nextDisplayOrder = (maxDisplayOrderTask?.displayOrder ?: 0) + 1
+
         val task = Task.create(
             id = idGenerator.nextId(),
             memberId = memberId,
             title = title,
             description = description,
+            displayOrder = nextDisplayOrder,
             startAt = startAt,
             endAt = endAt,
             dueAt = dueAt,
@@ -54,6 +61,7 @@ class TaskService(
         title: String?,
         description: String?,
         status: TaskStatus?,
+        displayOrder: Int?,
         startAt: LocalDateTime?,
         endAt: LocalDateTime?,
         dueAt: LocalDateTime?
@@ -61,7 +69,7 @@ class TaskService(
         val task = getById(id)
         val previousStatus = task.status
 
-        task.update(title, description, status, startAt, endAt, dueAt)
+        task.update(title, description, status, displayOrder, startAt, endAt, dueAt)
         val updatedTask = taskRepository.save(task)
 
         // Task가 완료 상태로 변경되었을 때 리워드 생성

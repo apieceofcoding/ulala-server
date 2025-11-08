@@ -13,6 +13,8 @@ class TaskUpdateRequest(
 
     val status: TaskStatus?,
 
+    val displayOrder: Int?,
+
     val startAt: LocalDateTime?,
 
     val endAt: LocalDateTime?,

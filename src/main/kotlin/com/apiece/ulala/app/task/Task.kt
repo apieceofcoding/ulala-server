@@ -24,6 +24,9 @@ class Task private constructor(
     @Column(nullable = false)
     var status: TaskStatus = TaskStatus.TODO,
 
+    @Column(nullable = false)
+    var displayOrder: Int = 1,
+
     @Column
     var startAt: LocalDateTime? = null,
 
@@ -37,7 +40,6 @@ class Task private constructor(
     var deleted: Boolean = false,
 
     var deletedAt: LocalDateTime? = null
-
 ) : BaseEntity() {
 
     init {
@@ -51,6 +53,7 @@ class Task private constructor(
             memberId: Long,
             title: String,
             description: String? = null,
+            displayOrder: Int = 1,
             startAt: LocalDateTime? = null,
             endAt: LocalDateTime? = null,
             dueAt: LocalDateTime? = null,
@@ -60,6 +63,7 @@ class Task private constructor(
                 memberId = memberId,
                 title = title,
                 description = description,
+                displayOrder = displayOrder,
                 startAt = startAt ?: LocalDateTime.now(),
                 endAt = endAt,
                 dueAt = dueAt,
@@ -71,6 +75,7 @@ class Task private constructor(
         title: String?,
         description: String?,
         status: TaskStatus?,
+        displayOrder: Int?,
         startAt: LocalDateTime?,
         endAt: LocalDateTime?,
         dueAt: LocalDateTime?
@@ -85,6 +90,7 @@ class Task private constructor(
                 this.endAt = null
             }
         }
+        displayOrder?.let { this.displayOrder = it }
         startAt?.let { this.startAt = it }
         endAt?.let { this.endAt = it }
         dueAt?.let { this.dueAt = it }

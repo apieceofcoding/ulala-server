@@ -26,6 +26,7 @@ CREATE TABLE tasks (
     title           VARCHAR2(100 CHAR)    NOT NULL,
     description     VARCHAR2(4000 CHAR),
     status          VARCHAR2(255 CHAR)    NOT NULL CHECK (status IN ('TODO', 'IN_PROGRESS', 'DONE')),
+    display_order   NUMBER(10, 0) DEFAULT 1 NOT NULL,
     start_at        TIMESTAMP(6),
     end_at          TIMESTAMP(6),
     due_at          TIMESTAMP(6),
