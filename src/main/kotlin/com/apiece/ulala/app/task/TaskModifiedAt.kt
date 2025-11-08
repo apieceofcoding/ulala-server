@@ -4,4 +4,5 @@ import java.time.LocalDateTime
 
 class TaskModifiedAt(
     val modifiedAt: LocalDateTime,
+    val createdAt: LocalDateTime,
 )

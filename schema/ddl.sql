@@ -40,6 +40,7 @@ CREATE TABLE tasks (
 );
 
 CREATE INDEX idx_tasks_member_id_deleted_id ON tasks (member_id, deleted, id DESC);
+CREATE INDEX idx_tasks_member_id_deleted_created  ON tasks (member_id, deleted, created_at);
 CREATE INDEX idx_tasks_member_id_deleted_modified ON tasks (member_id, deleted, modified_at);
 
 CREATE TABLE rewards (

@@ -99,12 +99,23 @@ class TaskService(
         val endAt = endDate.plusDays(1).atStartOfDay()
         val tasks: List<TaskModifiedAt> = taskRepository.findByMemberIdAndModifiedAtBetween(memberId, startAt, endAt)
 
-        val stats = tasks
-            .groupBy { it.modifiedAt.toLocalDate() }
-            .map { (date, taskList) -> TaskDailyStats(date, count = taskList.size) }
-            .sortedBy { it.date }
+        return tasks
+            .flatMap { task ->
+                val modifiedDate = task.modifiedAt.toLocalDate()
+                val createdDate = task.createdAt.toLocalDate()
 
-        return stats
+                buildList {
+                    if (modifiedDate in startDate..endDate) {
+                        add(modifiedDate)
+                    }
+                    if (createdDate in startDate..endDate && !modifiedDate.equals(createdDate) ) {
+                        add(createdDate)
+                    }
+                }
+            }
+            .groupBy { it }
+            .map { (date, dates) -> TaskDailyStats(date, dates.size) }
+            .sortedBy { it.date }
     }
 
     fun getRecentlyModifiedTasks(memberId: Long, pageSize: Int = 5): Slice<Task> {

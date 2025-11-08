@@ -14,12 +14,14 @@ interface TaskRepository : JpaRepository<Task, Long> {
 
     @Query(
         value = """
-        SELECT t.modifiedAt as modifiedAt
+        SELECT t.modifiedAt as modifiedAt, t.createdAt as createdAt
         FROM Task t
         WHERE t.memberId = :memberId
         AND t.deleted = false
-        AND t.modifiedAt >= :startAt
-        AND t.modifiedAt < :endAt
+        AND (
+            (t.modifiedAt >= :startAt AND t.modifiedAt < :endAt)
+            OR (t.createdAt >= :startAt AND t.createdAt < :endAt)
+        )
         """
     )
     fun findByMemberIdAndModifiedAtBetween(
