@@ -2,8 +2,8 @@ package com.apiece.ulala.adapter.web.reward
 
 import com.apiece.ulala.adapter.web.reward.dto.RewardCreateRequest
 import com.apiece.ulala.adapter.web.reward.dto.RewardResponse
+import com.apiece.ulala.adapter.web.reward.dto.RewardSearchRequest
 import com.apiece.ulala.adapter.web.reward.dto.RewardUpdateRequest
-import com.apiece.ulala.adapter.web.reward.dto.TodayRewardSummary
 import com.apiece.ulala.app.reward.RewardService
 import jakarta.validation.Valid
 import org.springframework.data.domain.Page
@@ -50,14 +50,6 @@ class RewardController(
             .map { RewardResponse.from(it) }
     }
 
-    @GetMapping("/api/rewards/today")
-    fun getTodayRewards(
-        @AuthenticationPrincipal user: User
-    ): TodayRewardSummary {
-        val (totalPoint, totalExp) = rewardService.getTodayRewardSummary(user.username.toLong())
-        return TodayRewardSummary(totalPoint, totalExp)
-    }
-
     @PutMapping("/api/rewards/{id}")
     fun updateReward(
         @PathVariable id: String,
@@ -77,5 +69,13 @@ class RewardController(
     @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteReward(@PathVariable id: String) {
         rewardService.deleteReward(id.toLong())
+    }
+
+    @PostMapping("/api/rewards/search")
+    fun searchRewards(
+        @Valid @RequestBody request: RewardSearchRequest
+    ): List<RewardResponse> {
+        return rewardService.getRewardsBySourceTypeAndSourceIds(request.sourceType, request.sourceIds)
+            .map { RewardResponse.from(it) }
     }
 }

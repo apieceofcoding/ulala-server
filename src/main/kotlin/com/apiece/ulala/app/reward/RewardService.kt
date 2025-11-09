@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
-import java.time.LocalDate
 
 @Service
 class RewardService(
@@ -78,20 +77,7 @@ class RewardService(
         )
     }
 
-    fun getTodayRewards(memberId: Long): List<Reward> {
-        val today = LocalDate.now()
-        val startAt = today.atStartOfDay()
-        val endAt = today.plusDays(1).atStartOfDay()
-
-        return rewardRepository.findByMemberIdAndCreatedAtBetween(memberId, startAt, endAt)
-    }
-
-    fun getTodayRewardSummary(memberId: Long): Pair<BigDecimal, BigDecimal> {
-        val todayRewards = getTodayRewards(memberId)
-
-        val totalPoint = todayRewards.sumOf { it.point }
-        val totalExp = todayRewards.sumOf { it.exp }
-
-        return Pair(totalPoint, totalExp)
+    fun getRewardsBySourceTypeAndSourceIds(sourceType: SourceType, sourceIds: List<Long>): List<Reward> {
+        return rewardRepository.findBySourceTypeAndSourceIdIn(sourceType, sourceIds)
     }
 }
