@@ -25,7 +25,7 @@ CREATE TABLE tasks (
     member_id       NUMBER(19, 0)         NOT NULL,
     title           VARCHAR2(100 CHAR)    NOT NULL,
     description     VARCHAR2(4000 CHAR),
-    status          VARCHAR2(255 CHAR)    NOT NULL CHECK (status IN ('TODO', 'IN_PROGRESS', 'DONE')),
+    status          VARCHAR2(255 CHAR)    NOT NULL CHECK (status IN ('TODO', 'IN_PROGRESS', 'DONE', 'ON_HOLD')),
     display_order   NUMBER(10, 0) DEFAULT 1 NOT NULL,
     start_at        TIMESTAMP(6),
     end_at          TIMESTAMP(6),
