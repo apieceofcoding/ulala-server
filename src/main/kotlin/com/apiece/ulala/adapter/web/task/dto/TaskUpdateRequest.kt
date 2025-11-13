@@ -1,6 +1,7 @@
 package com.apiece.ulala.adapter.web.task.dto
 
 import com.apiece.ulala.app.task.TaskStatus
+import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
 import java.time.LocalDateTime
 
@@ -20,4 +21,7 @@ class TaskUpdateRequest(
     val endAt: LocalDateTime?,
 
     val dueAt: LocalDateTime?,
+
+    @field:NotNull
+    val updateNullFields: Boolean
 )

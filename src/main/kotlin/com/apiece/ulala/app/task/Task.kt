@@ -78,22 +78,32 @@ class Task private constructor(
         displayOrder: Int?,
         startAt: LocalDateTime?,
         endAt: LocalDateTime?,
-        dueAt: LocalDateTime?
+        dueAt: LocalDateTime?,
+        updateNullFields: Boolean,
     ) {
+        if (updateNullFields) {
+            this.description = description
+            this.startAt = startAt
+            this.endAt = endAt
+            this.dueAt = dueAt
+        } else {
+            description?.let { this.description = it }
+            startAt?.let { this.startAt = it }
+            endAt?.let { this.endAt = it }
+            dueAt?.let { this.dueAt = it }
+        }
+
+        // Non-Nullable fields
         title?.let { this.title = it }
-        description?.let { this.description = it }
         status?.let {
             this.status = it
-            if (it == TaskStatus.DONE && this.endAt == null) {
-                this.endAt = LocalDateTime.now()
-            } else if (it != TaskStatus.DONE) {
-                this.endAt = null
+            this.endAt = if (it == TaskStatus.DONE) {
+                LocalDateTime.now()
+            } else {
+                null
             }
         }
         displayOrder?.let { this.displayOrder = it }
-        startAt?.let { this.startAt = it }
-        endAt?.let { this.endAt = it }
-        dueAt?.let { this.dueAt = it }
     }
 
     fun delete() {

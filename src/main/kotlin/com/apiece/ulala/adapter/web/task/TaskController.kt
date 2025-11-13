@@ -64,6 +64,7 @@ class TaskController(
             startAt = request.startAt,
             endAt = request.endAt,
             dueAt = request.dueAt,
+            updateNullFields = request.updateNullFields
         )
         return TaskResponse.from(task)
     }

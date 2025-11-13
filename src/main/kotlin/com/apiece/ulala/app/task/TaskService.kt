@@ -64,19 +64,19 @@ class TaskService(
         displayOrder: Int?,
         startAt: LocalDateTime?,
         endAt: LocalDateTime?,
-        dueAt: LocalDateTime?
+        dueAt: LocalDateTime?,
+        updateNullFields: Boolean,
     ): Task {
         val task = getById(id)
-        val previousStatus = task.status
 
-        task.update(title, description, status, displayOrder, startAt, endAt, dueAt)
+        task.update(title, description, status, displayOrder, startAt, endAt, dueAt, updateNullFields)
+
         val updatedTask = taskRepository.save(task)
 
-        // Task가 완료 상태로 변경되었을 때 리워드 생성
-        if (status == TaskStatus.DONE && previousStatus != TaskStatus.DONE) {
+        if (updatedTask.status == TaskStatus.DONE) {
             rewardService.createRewardIfNotExists(
-                memberId = task.memberId,
-                sourceId = task.id,
+                memberId = updatedTask.memberId,
+                sourceId = updatedTask.id,
                 sourceType = SourceType.TASK,
                 point = BigDecimal("8"),
                 exp = BigDecimal("13")
@@ -108,7 +108,7 @@ class TaskService(
                     if (modifiedDate in startDate..endDate) {
                         add(modifiedDate)
                     }
-                    if (createdDate in startDate..endDate && !modifiedDate.equals(createdDate) ) {
+                    if (createdDate in startDate..endDate && !modifiedDate.equals(createdDate)) {
                         add(createdDate)
                     }
                 }
