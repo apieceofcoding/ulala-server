@@ -1,8 +1,8 @@
 package com.apiece.ulala.adapter.web.member
 
-import com.apiece.ulala.adapter.web.member.dto.UsernameCheckResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberResponse
 import com.apiece.ulala.adapter.web.member.dto.MemberUpdateRequest
+import com.apiece.ulala.adapter.web.member.dto.UsernameCheckResponse
 import com.apiece.ulala.app.member.MemberService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User

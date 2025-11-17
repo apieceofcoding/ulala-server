@@ -5,3 +5,4 @@ spring:
     import:
     - optional:classpath:private/db.yml
     - optional:classpath:private/security.yml
+    - optional:classpath:private/observability.yml

@@ -21,6 +21,9 @@ echo -e "${GREEN}========================================${NO_COLOR}"
 
 # 1. 로컬 빌드
 echo -e "\n${YELLOW}[1/4] 프로젝트 로컬 빌드 중...${NO_COLOR}"
+echo -e "Loading environment variables from .env"
+export $(grep -v '^#' .env | xargs)
+
 echo -e "${YELLOW}./gradlew clean build${NO_COLOR}"
 STEP_START=$(date +%s)
 ./gradlew clean build
