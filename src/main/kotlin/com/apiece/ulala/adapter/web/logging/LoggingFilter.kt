@@ -1,6 +1,5 @@
 package com.apiece.ulala.adapter.web.logging
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.oshai.kotlinlogging.KotlinLogging
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 import org.springframework.web.util.ContentCachingRequestWrapper
 import org.springframework.web.util.ContentCachingResponseWrapper
+import tools.jackson.databind.ObjectMapper
 import java.nio.charset.StandardCharsets
 
 private val log = KotlinLogging.logger {}
@@ -26,7 +26,7 @@ class LoggingFilter(
         response: HttpServletResponse,
         filterChain: FilterChain
     ) {
-        val cachedRequest = request as? ContentCachingRequestWrapper ?: ContentCachingRequestWrapper(request)
+        val cachedRequest = request as? ContentCachingRequestWrapper ?: ContentCachingRequestWrapper(request, 0)
         val cachedResponse = response as? ContentCachingResponseWrapper ?: ContentCachingResponseWrapper(response)
 
         val startTime = System.currentTimeMillis()
